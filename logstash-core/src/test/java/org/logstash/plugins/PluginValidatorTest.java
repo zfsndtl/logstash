@@ -52,21 +52,9 @@ public class PluginValidatorTest {
                     getClass().getResourceAsStream("logstash-input-java_input_example-0.0.1.jar");
             Files.copy(resourceJar, tempJar, REPLACE_EXISTING);
 
-            JarFile jarFile = new JarFile(tempJar.toFile());
-            Enumeration<JarEntry> e = jarFile.entries();
-            URL[] jarUrl = {new URL("jar:file:" + tempJar.toAbsolutePath() + "!/")};
+            URL[] jarUrl = {tempJar.toUri().toURL()};
             URLClassLoader cl = URLClassLoader.newInstance(jarUrl);
-
-            Class<?> oldInputClass = null;
-            while (e.hasMoreElements() && oldInputClass == null) {
-                JarEntry je = e.nextElement();
-                if (!je.getName().equals("org/logstash/javaapi/JavaInputExample.class")) {
-                    continue;
-                }
-                String className = je.getName().substring(0, je.getName().length() - 6);
-                className = className.replace('/', '.');
-                oldInputClass = cl.loadClass(className);
-            }
+            Class<?> oldInputClass = cl.loadClass("org.logstash.javaapi.JavaInputExample");
 
             Assert.assertNotNull(oldInputClass);
             Assert.assertFalse(PluginValidator.validatePlugin(PluginLookup.PluginType.INPUT, oldInputClass));

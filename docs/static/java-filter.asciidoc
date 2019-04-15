@@ -14,8 +14,6 @@
 [[java-filter-plugin]]
 === How to write a Java filter plugin
 
-beta[]
-
 // Pulls in shared section: Setting Up Environment
 include::include/javapluginsetup.asciidoc[]
 
@@ -248,11 +246,11 @@ Start Logstash with:
 
 [source,shell]
 -----
-bin/logstash --java-execution -f /path/to/java_filter.conf
+bin/logstash -f /path/to/java_filter.conf
 -----
 
-NOTE: The `--java-execution` flag to enable the Java execution engine is
-required as Java plugins are not supported in the Ruby execution engine.
+NOTE: The Java execution engine, the default execution engine since Logstash 7.0, is required
+as Java plugins are not supported in the Ruby execution engine.
 
 The expected Logstash output (excluding initialization) with the configuration
 above is:
